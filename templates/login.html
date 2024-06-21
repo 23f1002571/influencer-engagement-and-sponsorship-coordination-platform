@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block title %}
+Login Page
+{% endblock %}
+{% block content %}
+    <h1>Login</h1>
+    <form method="POST" >
+        <label for="username" class="form-label">Username*
+        <input type="text" name="username" id="username" class="form-control" required/>
+        </label>    
+        <label for="password" class="form-label">Password*
+        <input type="password" name="password" id="password" class="form-control" required/>
+        </label>
+        <input type="submit" value="Login" class="btn btn-success">
+    </form>
+{% endblock %}
+{% block style %}
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            }
+        body {
+            background-color: #f5f5f5;
+        }   
+        h1 {
+            margin-top: 64px;
+            text-align: center;
+        } 
+    </style>
+{% endblock %}

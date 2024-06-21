@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% block title %}
+Influencer Registration Page
+{% endblock %}
+{% block content %}
+    <h1>Register as Influencer</h1>
+
+    <form method="post">
+        <label for="name"  class="form-label">Name*
+        <input type="text" id="name" name="name" class="form-control" required/>
+        </label>
+        <label for="username" class="form-label">Username*
+        <input type="text" name="username" id="username" class="form-control" required/>
+        </label>
+        <label for="password" class="form-label">Password*
+        <input type="password" name="password" id="password" class="form-control" required/>
+        </label>
+        <label for="options" class="form-label">Select an option*
+        <select id="options" name="options" required >
+          <option value="option1">Option 1</option>
+          <option value="option2">Option 2</option>
+          <option value="option3">Option 3</option>
+          <option value="others">Others</option>
+        </select>
+        </label>
+        <label for="others-text">If Others, please specify:</label>
+        <input type="text" id="others-text" name="others-text"><br>
+        <input type="submit" value="Register" class="btn btn-success">
+        
+      </form>
+{% endblock %}
+{% block style %}
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            }
+        body {
+            background-color: #f5f5f5;
+        }   
+        h1 {
+            margin-top: 64px;
+            text-align: center;
+        } 
+    </style>
+{% endblock %}
