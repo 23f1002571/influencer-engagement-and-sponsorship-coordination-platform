@@ -1,0 +1,18 @@
+{% extends 'layout_adm.html' %}
+{% block title %}
+    Admin Dashboard
+{% endblock %}
+{% block content %}
+    <h1>Admin Dashboard</h1>
+    <a class="btn btn-outline-info" href="{{ url_for('find') }}">Click here to see all users</a>
+    <a class="btn btn-outline-info" href="{{ url_for('find_camp') }}">Click here to see all campaigns</a>
+  
+{% endblock %}  
+{% block style %} 
+<style>
+    h1{
+        margin: auto;
+        text-align: center;
+    }
+</style>   
+{% endblock %}  

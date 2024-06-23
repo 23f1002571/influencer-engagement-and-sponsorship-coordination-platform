@@ -7,14 +7,21 @@
 <h3>Edit {{ user.name }}'s Profile</h3>
 <form method="post">
     <label for="username" class="form-label">New Username
-        <input type="text" name="username" id="username" class="form-control" required value="{{user.username}}">
+        <input type="text" name="username" id="username" class="form-control" value="{{user.username}}">
     </label>
     <label for="name" class="form-label">New Name
-        <input type="text" name="name" id="name" class="form-control" value="{{user.name}}" required">
+        <input type="text" name="name" id="name" class="form-control" value="{{user.name}}">
+    </label>
+ 
+    <label for="email" class="form-label">New Email
+        <input type="text" name="email" id="email" class="form-control" value="{{user.email}}">
+    </label>
+    <label for="platform" class="form-label">New Platform
+        <input type="text" name="platform" id="platform" class="form-control" value="{{user.platform}}">
     </label>
     <label for="password" class="form-label">New Password
-        <input type="password" name="password" id="password" class="form-control" " required>
-    </label> 
+        <input type="password" name="password" id="password" class="form-control" ">
+    </label>
     <input type="submit" value="Save Changes" class="btn btn-success">      
 </form>
 {% endblock %}    

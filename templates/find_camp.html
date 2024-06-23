@@ -1,0 +1,36 @@
+{% extends 'layout_adm.html' %}
+{% block content %}
+<h1>Find Campaigns</h1>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Budget</th>
+      <th scope="col">Visibility</th>
+      <th scope="col">Sponsor</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for campaign in campaigns %}
+    <tr>
+      <td>{{ campaign.Campaign_id }}</td>
+      <td>{{ campaign.name }}</td>
+      <td>{{ campaign.description }}</td>
+      <td>{{ campaign.start_date }}</td>
+      <td>{{ campaign.end_date }}</td>
+      <td>{{ campaign.budget }}</td>
+      <td>{{ campaign.visibility }}</td>
+      <td>{{ campaign.sponsor_id}}</td>
+      <td>
+       
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

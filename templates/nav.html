@@ -13,7 +13,7 @@
               <a class="nav-link" href="{{ url_for('stats') }}"">stats</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('find') }}"">find</a>
+              <a class="nav-link" href="{{ url_for('find') }}"">Discover Campaigns</a>
             </li> 
             <li >
               <a class="btn btn-outline-danger" href="{{ url_for('logout') }}"">Logout</a>  
@@ -23,10 +23,7 @@
               <a class="nav-link" href="{{url_for('login')}}">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{url_for('register_in')}}">Register(Influncers)</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{url_for('profile')}}">Register(Sponsers)</a>
+              <a class="nav-link" href="{{url_for('register_in')}}">Register</a>
             </li>
             {% endif %}
           </ul>
