@@ -7,19 +7,22 @@ Campaigns Registration Page
 
     <form method="post">
         <label for="name" class="form-label">Name*
-        <input type="text" id="name" name="name" class="form-control" required/>
+        <input type="text" id="name" name="name" class="form-control" required value="{{campaign.name}}"/>
         </label>
         <label for="description" class="form-label">Description*
-        <textarea id="description" name="description" class="form-control" required/></textarea>
+        <input type="text" id="description" name="description" class="form-control"  value="{{campaign.description}}"/>
         </label>
         <label for="start_date" class="form-label">Start Date*
-        <input type="date" id="start_date" name="start_date" class="form-control" required/>
+        <input type="date" id="start_date" name="start_date" class="form-control" required value="{{campaign.start_date}}"/>
         </label>
         <label for="end_date" class="form-label">End Date*
-        <input type="date" id="end_date" name="end_date" class="form-control" required/>
+        <input type="date" id="end_date" name="end_date" class="form-control" required value="{{campaign.end_date}}"/>
         </label>
         <label for="budget" class="form-label">Budget*
-        <input type="number" id="budget" name="budget" class="form-control" required/>
+        <input type="number" id="budget" name="budget" class="form-control" required value="{{campaign.budget}}"/>
+        </label>
+        <label for="niche" class="form-label">Niche
+        <input type="text" id="niche" name="niche" class="form-control" required value="{{campaign.niche}}"/>
         </label>
         <label for="visibility" class="form-label">Visibility*
         <select id="visibility" name="visibility" class="form-control" required>

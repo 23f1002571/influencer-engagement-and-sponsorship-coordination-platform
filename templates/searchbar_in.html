@@ -1,0 +1,12 @@
+<form class="d-flex" role="search" method="post" action="{{ url_for('dis_camp') }}">
+    <select name="para" id="para">
+        <option value="Name">Name</option>
+        <option value="Description">Description</option>
+        <option value="Budget" selected>Budget</option>
+        <option value="niche" selected>Niche</option>
+        <option value="start_date" >start_date</option>
+        <option value="end_date" >end_date</option>
+    </select>
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>

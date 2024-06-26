@@ -1,0 +1,43 @@
+{% extends 'layout_sp.html' %}
+{% block content %}
+<h1>Request Influencers</h1>
+{% include 'searchbar_sp.html'   %}
+<br>
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Influencer_id ID</th>
+        <th scope="col">Username</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Role</th>
+        <th scope="col">Platform</th>
+        <th scope="col">Followers</th>
+        <th scope="col">Niche</th>
+        <th scope="col">Action</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.user_id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>{{ user.platform }}</td>
+        <td>{{ user.followers }}</td>
+        <td>{{ user.niche }}</td>
+        <td>
+            <form action="{{ url_for('create_request') }}" method="post">
+              <input type="hidden" name="campaign_id" value="{{ id }}">
+              <input type="hidden" name="influencer_id" value="{{ user.user_id }}">
+              <button type="submit" class="btn btn-primary">Request</button>
+            </form>
+          </td>
+    </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endblock %}

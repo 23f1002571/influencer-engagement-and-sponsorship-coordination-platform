@@ -1,0 +1,11 @@
+<form class="d-flex" role="search" method="post" action="{{ url_for('dis_influ') }}">
+    <select name="para" id="para">
+        <option value="Username">UserName</option>
+        <option value="Name">Name</option>
+        <option value="platform" >Platform</option>
+        <option value="followers" selected>Followers</option>
+        <option value="niche" selected>Niche</option>
+    </select>
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>

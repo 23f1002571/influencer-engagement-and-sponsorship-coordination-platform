@@ -12,10 +12,11 @@ class User(db.Model):
     email = db.Column(db.String(120), nullable=False)
     passhash = db.Column(db.String(512), nullable=False)
     role = db.Column(db.String(16), nullable=False)
-    platform = db.Column(db.String(64), nullable=True ,default= False)
+    platform = db.Column(db.String(64), nullable=True ,default= 'None')
+    followers=db.Column(db.Integer, nullable=True ,default= '1')
+    niche=db.Column(db.String(64), nullable=True ,default= 'None')
     campaigns = db.relationship('Campaign', backref='sponsor', lazy=True)
     ad_requests = db.relationship('AdRequest', backref='influencer', lazy=True)
-    
     @property
     def password(self):
         raise AttributeError('Dont have permission')
@@ -31,20 +32,29 @@ class Campaign(db.Model):
     description = db.Column(db.Text, nullable=False)
     start_date = db.Column(db.Date, nullable=False)
     end_date = db.Column(db.Date, nullable=False)
-    budget = db.Column(db.Float, nullable=False)
+    budget = db.Column(db.Integer, nullable=False)
     visibility = db.Column(db.String(8), nullable=False)
+    niche=db.Column(db.String(64), nullable=True ,default= 'None')
     sponsor_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     ad_requests = db.relationship('AdRequest', backref='campaign', lazy=True)
+
 class AdRequest(db.Model):
     __tablename__ = 'adrequest'
     Ad_id = db.Column(db.Integer, primary_key=True)
     campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.Campaign_id'), nullable=False)
     influencer_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    messages = db.Column(db.Text, nullable=False)
     requirements = db.Column(db.Text, nullable=False)
     payment_amount = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(16), nullable=False, default='Pending')
-    dateTime = db.Column(db.DateTime,nullable=False )
+    campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.Campaign_id'), nullable=False)
+    influencer_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+class Request(db.Model):
+    __tablename__ = 'request'
+    request_id = db.Column(db.Integer, primary_key=True)
+    campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.Campaign_id'), nullable=False)
+    campaign = db.relationship('Campaign', backref=db.backref('requests', lazy=True))
+    influencer_id=db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=True)
+    new_price = db.Column(db.Integer, nullable=True)
 with app.app_context():
     db.create_all()
     admin=User.query.filter_by(is_admin=True).first()

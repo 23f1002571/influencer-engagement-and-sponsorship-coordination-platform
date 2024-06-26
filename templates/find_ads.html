@@ -1,0 +1,35 @@
+{% extends 'layout_adm.html' %}
+{% block content %}
+<h1>All Ads</h1>
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">AdID</th>
+        <th scope="col">InfluID</th>
+        <th scope="col">CampID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Start Date</th>
+        <th scope="col">End Date</th>
+        <th scope="col">Budget</th>
+        <th scope="col">Status</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for ad in ads %}
+      <tr>
+        <td>{{ad.Ad_id}}</td>
+        <td>{{ad.influencer_id}}</td>
+        <td>{{ ad.campaign.Campaign_id }}</td>
+        <td>{{ ad.campaign.name }}</td>
+        <td>{{ ad.requirements }}</td>
+        <td>{{ ad.campaign.start_date }}</td>
+        <td>{{ ad.campaign.end_date }}</td>
+        <td>{{ ad.payment_amount }}</td>
+        <td>{{ ad.status }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endblock %}

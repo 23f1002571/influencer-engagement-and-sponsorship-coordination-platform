@@ -1,0 +1,9 @@
+{% extends 'layout_in.html' %}
+{% block content %}
+    <h1>Negotiate Campaign {{ campaigns.name }}</h1>
+    <form method="post" action="{{ url_for('propose_price', Campaign_id =campaigns.id) }}">
+      <label for="proposed_price">Proposed Price:</label>
+      <input type="number" id="proposed_price" name="proposed_price" required>
+      <button type="submit" class="btn btn-primary">Propose</button>
+    </form>
+{% endblock %}

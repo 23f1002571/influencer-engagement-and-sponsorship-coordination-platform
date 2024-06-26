@@ -1,0 +1,50 @@
+{% extends 'layout_in.html' %}
+
+{% block content %}
+  <h1>Requests</h1>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" style="width: 50px;">Request ID</th>
+        <th scope="col" style="width: 50px;">Campaign Name</th>
+        <th scope="col"style="width: 200px;">Campaign Description</th>
+        <th scope="col" style="width: 100px;">Start Date</th>
+        <th scope="col" style="width: 100px;">End Date</th>
+        <th scope="col" style="width: 50px;">Budget</th>
+        <th scope="col" style="width: 100px;">Niche</th>
+        <th scope="col" style="width: 50px;">New Price</th>
+        <th scope="col" style="width: 50px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for request in requests %}
+      <tr>
+        <td>{{ request.request_id }}</td>
+        <td>{{ request.campaign.name }}</td>
+        <td>{{ request.campaign.description }}</td>
+        <td>{{ request.campaign.start_date }}</td>
+        <td>{{ request.campaign.end_date }}</td>
+        <td>{{ request.campaign.budget }}</td>
+        <td>{{ request.campaign.niche }}</td>
+        <td>
+          {{ request.new_price }}
+          <form action="{{ url_for('negotiate_request', request_id=request.request_id) }}" method="post">
+            <input type="number" placeholder="Enter amt" name="new_price">
+            <input type="submit"  class="btn btn-outline-warning" value="Negotiate">
+          </form>
+        </td>
+        <td>
+          <div style="display: flex; justify-content: space-between;">
+            <form action="{{ url_for('accept_request', request_id=request.request_id) }}" method="post" style="display: inline-block;">
+              <input type="submit" class="btn btn-outline-success" value="Accept" {% if request.new_price is none %}disabled{% endif %}>
+            </form>
+            <form action="{{ url_for('reject_request', request_id=request.request_id) }}" method="post">
+              <input type="submit" class="btn btn-outline-danger" value="Reject">
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

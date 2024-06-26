@@ -9,10 +9,16 @@
           <a class="nav-link" href="{{ url_for('profile') }}"">profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('stats') }}"">stats</a>
+          <a class="nav-link" href="{{ url_for('requests_in') }}">Requests</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('find') }}"">Discover Campaigns</a>
+          <a class="nav-link" href="{{ url_for('dis_camp') }}"">Discover Campaigns</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('accepted_campaigns') }}"">accepted_campaigns</a>
+        </li> 
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('completed_ads') }}"">Completed Camps</a>
         </li> 
         <li >
           <a class="btn btn-outline-danger" href="{{ url_for('logout') }}"">Logout</a>  

@@ -1,0 +1,30 @@
+{% extends 'layout_in.html' %}
+{% block content %}
+<h1>Completed Ads</h1>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">CampID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Budget</th>
+      <th scope="col">Niche</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ad_request in ad_requests %}
+    <tr>
+      <td>{{ ad_request.campaign.Campaign_id }}</td>
+      <td>{{ ad_request.campaign.name }}</td>
+      <td>{{ ad_request.campaign.description }}</td>
+      <td>{{ ad_request.campaign.start_date }}</td>
+      <td>{{ ad_request.campaign.end_date }}</td>
+      <td>{{ ad_request.campaign.budget }}</td>
+      <td>{{ ad_request.campaign.niche }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
