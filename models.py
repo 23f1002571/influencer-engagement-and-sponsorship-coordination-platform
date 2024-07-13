@@ -55,6 +55,8 @@ class Request(db.Model):
     campaign = db.relationship('Campaign', backref=db.backref('requests', lazy=True))
     influencer_id=db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=True)
     new_price = db.Column(db.Integer, nullable=True)
+    influencer_agreed = db.Column(db.Boolean, default=False)
+    sponsor_agreed = db.Column(db.Boolean, default=False)
 with app.app_context():
     db.create_all()
     admin=User.query.filter_by(is_admin=True).first()

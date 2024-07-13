@@ -379,7 +379,26 @@ def reject_request(request_id):
 @app.route('/accept_request/<int:request_id>', methods=['POST'])
 def accept_request(request_id):
     request = Request.query.get(request_id)
-    if request:
+    user=User.query.get(session['user_id'])
+    if request and request.new_price!=None and user.role=='sponsor':
+        request.sponsor_agreed=True
+        db.session.commit()
+        flash(' updated successfully')
+    elif request and request.new_price==None and user.role=='sponsor':
+        request.sponsor_agreed=True
+        request.new_price=request.campaign.budget
+        db.session.commit()
+        flash(' updated successfully')
+    elif request and request.new_price!=None and user.role=='influencer':
+        request.influencer_agreed=True 
+        db.session.commit()
+        flash(' updated successfully')  
+    elif request and request.new_price==None and user.role=='influencer':
+        request.influencer_agreed=True
+        request.new_price=request.campaign.budget  
+        db.session.commit()
+        flash(' updated successfully')  
+    if request and request.new_price!=None and request.influencer_agreed==True and request.sponsor_agreed==True:
         new_ad_request = AdRequest(
             campaign_id=request.campaign_id,
             influencer_id=request.influencer_id,
@@ -392,4 +411,32 @@ def accept_request(request_id):
         db.session.delete(request)
         db.session.commit()
         flash('Request accepted and AdRequest created')
-    return redirect(url_for('requests_sp'))    
+    elif request and request.new_price==None and request.influencer_agreed==True and request.sponsor_agreed==True:
+        new_ad_request = AdRequest(
+            campaign_id=request.campaign_id,
+            influencer_id=request.influencer_id,
+            requirements=request.campaign.description,
+            payment_amount=request.campaign.budget,
+            status='Pending'
+        ) 
+        db.session.add(new_ad_request)
+        db.session.commit()
+        db.session.delete(request)
+        db.session.commit()
+        flash('Request accepted and AdRequest created')
+    else:
+        flash('Please wait for the other party to accept request')
+    if user.role=='influencer':        
+        return redirect(url_for('requests_in'))
+    else:
+        return redirect(url_for('requests_sp'))   
+@app.route('/req_camp', methods=['POST'])
+@auth
+def req_camp():
+    campaign_id = request.form['campaign_id']
+    user = User.query.get(session['user_id'])
+    new_request = Request(campaign_id=campaign_id, influencer_id=user.user_id)
+    db.session.add(new_request)
+    db.session.commit()
+    flash('Request created successfully!')
+    return redirect(url_for('dis_camp', id=campaign_id, user=user))
