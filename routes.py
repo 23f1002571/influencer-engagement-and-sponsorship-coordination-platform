@@ -22,14 +22,33 @@ def index():
         return redirect(url_for('admin'))
     else:
         if user.role=='influencer':
-            return render_template('index_in.html',user=user)
+            count_cads = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Completed').count()
+            count_pads = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Pending').count()
+            count_req=Request.query.filter_by(influencer_id=user.user_id).count()
+            count_camps=Campaign.query.filter_by(visibility='public').count()
+            return render_template('index_in.html',user=user,count_cads=count_cads,count_pads=count_pads,count_req=count_req,count_camps=count_camps)
         else:
-            return render_template('index_sp.html',user=user) 
+            sponsor_id = session['user_id']
+            count_camps = Campaign.query.filter_by(sponsor_id=user.user_id).count()
+            count_req=Request.query.join(Campaign).filter(Campaign.sponsor_id == sponsor_id).count()
+            count_in=User.query.filter_by(role='influencer').count()
+            count_pads=AdRequest.query.join(Campaign).filter(Campaign.sponsor_id == user.user_id).filter(AdRequest.status == "Pending").count()
+            count_cads = AdRequest.query.join(Campaign).filter(Campaign.sponsor_id == user.user_id).filter(AdRequest.status == "Completed").count()
+            return render_template('index_sp.html',user=user,count_in=count_in,count_req=count_req,count_camps=count_camps,count_cads=count_cads,count_pads=count_pads) 
 @app.route('/admin')
 @auth
 def admin():
     user=User.query.get(session['user_id'])
-    return render_template('admin.html',user=user)    
+    count_tads = AdRequest.query.count()
+    count_cads = AdRequest.query.filter_by(status='Completed').count()
+    count_pads = AdRequest.query.filter_by(status='Pending').count()
+    count_req=Request.query.count()
+    count_campspu=Campaign.query.filter_by(visibility='public').count()
+    count_campspv=Campaign.query.filter_by(visibility='private').count()
+    count_camps=Campaign.query.count()
+    count_in=User.query.filter_by(role='influencer').count()
+    count_sp=User.query.filter_by(role='sponsor').count()
+    return render_template('admin.html',user=user,count_tads=count_tads,count_cads=count_cads,count_pads=count_pads,count_req=count_req,count_camps=count_camps,count_in=count_in,count_sp=count_sp,count_campspu=count_campspu,count_campspv=count_campspv)    
 @app.route('/profile')
 @auth
 def profile():
@@ -109,10 +128,6 @@ def logout():
     flash("Logout successfully")
     return redirect(url_for('login'))
 
-@app.route('/stats')
-@auth
-def stats():
-    return 'stats'
 @app.route('/campaigns')
 @auth
 def campaigns():
@@ -180,21 +195,21 @@ def delete_user(id):
         flash('Access denied')
         return redirect(url_for('find'))
 
-@app.route('/user/<int:id>', methods=['GET', 'POST'])
-@auth
-def edit_user(id):
-    user = User.query.get(id)
-    if request.method == 'POST':
-        user.username = request.form['username']
-        user.name = request.form['name']
-        user.email = request.form['email']
-        user.platform = request.form['platform']
-        if request.form['password']:
-            user.password = generate_password_hash(request.form['password'])
-        db.session.commit()
-        flash('Profile updated successfully')
-        return redirect(url_for('find'))
-    return render_template('profile.html', user=user)
+#@app.route('/user/<int:id>', methods=['GET', 'POST'])
+#@auth
+#def edit_user(id):
+#    user = User.query.get(id)
+#    if request.method == 'POST':
+#        user.username = request.form['username']
+#        user.name = request.form['name']
+#        user.email = request.form['email']
+#        user.platform = request.form['platform']
+#        if request.form['password']:
+#            user.password = generate_password_hash(request.form['password'])
+#        db.session.commit()
+#        flash('Profile updated successfully')
+#        return redirect(url_for('find'))
+#    return render_template('profile.html', user=user)
 @app.route('/campaigns/<int:id>/delete')
 @auth
 def delete_campaign(id):
@@ -253,9 +268,15 @@ def dis_camp():
         return render_template('dis_camps.html', campaigns=campaigns)
 @app.route('/accepted_campaigns', methods=['GET'])
 def accepted_campaigns():
-    ad_requests = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Pending').all()
-    return render_template('accepted_campaigns.html', ad_requests=ad_requests)
-  
+    user = User.query.get(session['user_id'])
+    if user.role=='influencer':
+        ad_requests = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Pending').all()
+        return render_template('accepted_campaigns.html', ad_requests=ad_requests)
+@app.route('/pending_campaigns', methods=['GET'])
+def pending_campaigns():
+    user = User.query.get(session['user_id'])
+    ad_requests = AdRequest.query.join(Campaign).filter(Campaign.sponsor_id == user.user_id).filter(AdRequest.status == "Pending").all()
+    return render_template('pending_camps.html', ad_requests=ad_requests)    
 @app.route('/campaign/<int:id>/accept', methods=['POST'])
 def accept_campaign(id):
     campaign = Campaign.query.get(id)
@@ -275,14 +296,16 @@ def done_campaign(id):
         db.session.commit()
         flash('Ad request marked as completed')
         return redirect(url_for('completed_ads'))
-    else:
-        flash('Ad request not found')
-        return redirect(url_for('accepted_campaigns'))
 @app.route('/completed_ads')
 @auth
 def completed_ads():
-    ad_requests = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Completed').all()
-    return render_template('completed_ads.html', ad_requests=ad_requests)    
+    user = User.query.get(session['user_id'])
+    if user.role=="influencer":
+        ad_requests = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Completed').all()
+        return render_template('completed_ads.html', ad_requests=ad_requests)
+    else:
+        ad_requests = AdRequest.query.join(Campaign).filter(Campaign.sponsor_id == user.user_id).filter(AdRequest.status == "Completed").all() 
+        return render_template('completed_camps.html', ad_requests=ad_requests)
 @app.route('/find_ads')
 @auth
 def find_ads():
@@ -291,7 +314,14 @@ def find_ads():
         return render_template('find_ads.html', ads=ads)
     else:
         return "Access denied"    
-
+@app.route('/find_req')
+@auth
+def find_req():
+    if User.query.get(session['user_id']).is_admin:
+        requests = Request.query.all()
+        return render_template('find_req.html', requests=requests)
+    else:
+        return "Access denied" 
 @app.route('/discover/influencer', methods=['GET', 'POST'])
 @auth
 def dis_influ():

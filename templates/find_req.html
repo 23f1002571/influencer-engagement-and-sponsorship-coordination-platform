@@ -1,6 +1,6 @@
-{% extends 'layout_sp.html' %}
+{% extends 'layout_adm.html' %}
 {% block content %}
-  <h1>Requests</h1>
+  <h1>All Requests</h1>
   <table class="table table-bordered  table-hover">
     <thead>
       <tr>
@@ -13,8 +13,8 @@
         <th scope="col" style="width: 50px;">Budget</th>
         <th scope="col" style="width: 100px;">Niche</th>
         <th scope="col" style="width: 50px;">Influencer Agreed</th>
+        <th scope="col" style="width: 50px;">Sponsor Agreed</th>
         <th scope="col" style="width: 100px;">New Price</th>
-        <th scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -29,24 +29,12 @@
         <td>{{ request.campaign.budget }}</td>
         <td>{{ request.campaign.niche }}</td>
         <td>{{ request.influencer_agreed }}</td>
+        <td>{{ request.sponsor_agreed }}</td>
         <td>
           {% if request.new_price is none %} {{ request.campaign.budget }}
           {% else %} {{ request.new_price }}
           {% endif %}
-          <form action="{{ url_for('negotiate_request', request_id=request.request_id) }}" method="post">
-            <input type="number" name="new_price" required placeholder="Enter amt" style="width: 100px;">
-            <input type="submit" class="btn btn-outline-warning" value="Negotiate" >
-          </form>
         </td>
-        <td>
-  <form action="{{ url_for('accept_request', request_id=request.request_id) }}" method="post" style="display: inline-block;">
-    <input type="submit" class="btn btn-outline-success" value="Accept">
-  </form>
-  <a class="btn btn-outline-primary" href="{{ url_for('edit_campaign', id=request.campaign_id) }}">Edit</a>
-  <form action="{{ url_for('reject_request', request_id=request.request_id) }}" method="post" style="display: inline-block;">
-    <input type="submit" class="btn btn-outline-danger" value="Reject">
-  </form>
-</td>
       </tr>
       {% endfor %}
     </tbody>

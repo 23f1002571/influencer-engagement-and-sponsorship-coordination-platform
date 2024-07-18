@@ -1,7 +1,51 @@
 {% extends 'layout_sp.html' %}
 {% block title %}
     Sponser Dashboard
-{% endblock %}
+{% endblock %}     
 {% block content %}
-    hello {{ user.name }} {{user.role}}
-{% endblock %}        
+    <h1>Welcome Back!! {{ user.name }}</h1>
+    <br>
+    <h3>Currents Stats</h3>
+    <br>
+    <div >
+    <table class="table table-bordered  table-hover" style="width: auto; margin: auto;">
+        <thead>
+          <tr>
+            <th scope="col">Completed Campaigns</th>
+            <th scope="col">Pending Campaigns</th>
+            <th scope="col">Pending Requests</th>
+            <th scope="col">My Campaigns</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{count_cads}}</td>
+            <td>{{count_pads}}</td>
+            <td>{{count_req}}</td>
+            <td>{{count_camps}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>  
+    <br>
+    <div >
+        <table class="table table-bordered  table-hover" style="width: auto; margin: auto;">
+            <thead>
+              <tr>
+                <th scope="col">Available Influencer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{count_in}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+<style>
+    h1,h3,table{
+        text-align: center;
+        }
+
+</style>
+{% endblock %}  

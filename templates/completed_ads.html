@@ -1,7 +1,7 @@
 {% extends 'layout_in.html' %}
 {% block content %}
 <h1>Completed Ads</h1>
-<table class="table table-bordered">
+<table class="table table-bordered  table-hover">
   <thead>
     <tr>
       <th scope="col">CampID</th>
@@ -9,7 +9,7 @@
       <th scope="col">Description</th>
       <th scope="col">Start Date</th>
       <th scope="col">End Date</th>
-      <th scope="col">Budget</th>
+      <th scope="col">Price</th>
       <th scope="col">Niche</th>
     </tr>
   </thead>
@@ -21,7 +21,7 @@
       <td>{{ ad_request.campaign.description }}</td>
       <td>{{ ad_request.campaign.start_date }}</td>
       <td>{{ ad_request.campaign.end_date }}</td>
-      <td>{{ ad_request.campaign.budget }}</td>
+      <td>{{ ad_request.payment_amount }}</td>
       <td>{{ ad_request.campaign.niche }}</td>
     </tr>
     {% endfor %}

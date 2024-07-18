@@ -41,8 +41,6 @@ class Campaign(db.Model):
 class AdRequest(db.Model):
     __tablename__ = 'adrequest'
     Ad_id = db.Column(db.Integer, primary_key=True)
-    campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.Campaign_id'), nullable=False)
-    influencer_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     requirements = db.Column(db.Text, nullable=False)
     payment_amount = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(16), nullable=False, default='Pending')

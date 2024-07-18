@@ -3,16 +3,70 @@
     Admin Dashboard
 {% endblock %}
 {% block content %}
-    <h1>Admin Dashboard</h1>
-    <a class="btn btn-outline-info" href="{{ url_for('find') }}">Click here to see all users</a>
-    <a class="btn btn-outline-info" href="{{ url_for('find_camp') }}">Click here to see all campaigns</a>
-    <a class="btn btn-outline-info" href="{{ url_for('find_ads') }}">Click here to see all Ad Request</a>
-{% endblock %}  
-{% block style %} 
+    <h1>Welcome Back!! {{ user.name }}</h1>
+    <br>
+    <h3>Admin Dashboard</h3>
+    <br>
+    <div >
+    <table class="table table-bordered  table-hover" style="width: auto; margin: auto;">
+        <thead>
+          <tr>
+            <th scope="col">Total ads</th>
+            <th scope="col">Completed ads</th>
+            <th scope="col">Pending ads</th>
+            <th scope="col">Pending Requests</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{count_tads}}</td>
+            <td>{{count_cads}}</td>
+            <td>{{count_pads}}</td>
+            <td>{{count_req}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div> 
+    <br>
+    <div >
+      <table class="table table-bordered  table-hover" style="width: auto; margin: auto;">
+          <thead>
+            <tr>
+              <th scope="col">Available Campaigns</th>
+              <th scope="col">Public Campaigns</th>
+              <th scope="col">Private Campaigns</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{count_camps}}</td>
+              <td>{{count_campspu}}</td>
+              <td>{{count_campspv}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    <br>
+    <div >
+        <table class="table table-bordered  table-hover" style="width: auto; margin: auto;">
+            <thead>
+              <tr>
+                <th scope="col">Total Influencers</th>
+                <th scope="col">Total Sponsors</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{count_in}}</td>
+                <td>{{count_sp}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
 <style>
-    h1{
-        margin: auto;
+    h1,h3,table{
         text-align: center;
-    }
-</style>   
+        }
+
+</style>
 {% endblock %}  

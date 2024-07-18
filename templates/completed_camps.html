@@ -1,6 +1,6 @@
-{% extends 'layout_in.html' %}
+{% extends 'layout_sp.html' %}
 {% block content %}
-<h1>Accepted Campaigns</h1>
+<h1>Completed Campaigns</h1>
 <table class="table table-bordered  table-hover">
   <thead>
     <tr>
@@ -11,8 +11,6 @@
       <th scope="col">End Date</th>
       <th scope="col">Price</th>
       <th scope="col">Niche</th>
-      <th scope="col">Status</th>
-      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -25,12 +23,6 @@
       <td>{{ ad_request.campaign.end_date }}</td>
       <td>{{ ad_request.payment_amount }}</td>
       <td>{{ ad_request.campaign.niche }}</td>
-      <td>{{ ad_request.status }}</td>
-      <td>
-        <form action="{{ url_for('done_campaign', id=ad_request.campaign.Campaign_id) }}" method="post">
-          <button class="btn btn-outline-primary">Mark as done</button>
-        </form>
-      </td>
     </tr>
     {% endfor %}
   </tbody>

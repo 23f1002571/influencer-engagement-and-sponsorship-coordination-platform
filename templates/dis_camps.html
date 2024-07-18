@@ -3,14 +3,14 @@
 <h1>Available Campaigns</h1>
 {% include 'searchbar_in.html'   %}
 <br>
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
   <thead>
     <tr>
       <th scope="col">CampID</th>
       <th scope="col">Name</th>
       <th scope="col">Description</th>
       <th scope="col">Start Date</th>
-      <th scope="col">End Date</th>
+      <th scope="col" >End Date</th>
       <th scope="col">Budget</th>
       <th scope="col">Niche</th>
       <th scope="col">Actions</th>
@@ -27,11 +27,16 @@
       <td>{{ campaign.budget }}</td>
       <td>{{ campaign.niche }}</td>
       <td>
+        <div style="display: flex; justify-content: space-around;">
         <form method="post" action="{{ url_for('accept_campaign', id=campaign.Campaign_id) }}">
           <button type="submit" class="btn btn-outline-success">Accept</button>
         </form>
+        <form method="post" action="{{ url_for('req_camp') }}">
+          <input type="hidden" name="campaign_id" value="{{ campaign.Campaign_id }}">
+          <button type="submit" class="btn btn-outline-primary">Request</button>
       </form>
-      
+      </form>
+    </div>
       </td>
     </tr>
     {% endfor %}
