@@ -9,6 +9,7 @@ class User(db.Model):
     username = db.Column(db.String(64), nullable=False)
     name = db.Column(db.String(64), nullable=False)
     is_admin=db.Column(db.Boolean, nullable=False, default= False)
+    flag=db.Column(db.Boolean, nullable=True, default= False)
     email = db.Column(db.String(120), nullable=False)
     passhash = db.Column(db.String(512), nullable=False)
     role = db.Column(db.String(16), nullable=False)
@@ -37,6 +38,7 @@ class Campaign(db.Model):
     niche=db.Column(db.String(64), nullable=True ,default= 'None')
     sponsor_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     ad_requests = db.relationship('AdRequest', backref='campaign', lazy=True)
+    flag=db.Column(db.Boolean, nullable=True, default= False)
 
 class AdRequest(db.Model):
     __tablename__ = 'adrequest'

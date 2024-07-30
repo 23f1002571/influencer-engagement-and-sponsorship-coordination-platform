@@ -22,19 +22,27 @@ def index():
         return redirect(url_for('admin'))
     else:
         if user.role=='influencer':
-            count_cads = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Completed').count()
-            count_pads = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Pending').count()
-            count_req=Request.query.filter_by(influencer_id=user.user_id).count()
-            count_camps=Campaign.query.filter_by(visibility='public').count()
-            return render_template('index_in.html',user=user,count_cads=count_cads,count_pads=count_pads,count_req=count_req,count_camps=count_camps)
+            if user.flag:
+                flash('User is flaged please contact website admin')
+                return redirect(url_for('login'))
+            else:
+                count_cads = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Completed').count()
+                count_pads = AdRequest.query.filter_by(influencer_id=session['user_id'], status='Pending').count()
+                count_req=Request.query.filter_by(influencer_id=user.user_id).count()
+                count_camps=Campaign.query.filter_by(visibility='public',flag=False).count()
+                return render_template('index_in.html',user=user,count_cads=count_cads,count_pads=count_pads,count_req=count_req,count_camps=count_camps)
         else:
-            sponsor_id = session['user_id']
-            count_camps = Campaign.query.filter_by(sponsor_id=user.user_id).count()
-            count_req=Request.query.join(Campaign).filter(Campaign.sponsor_id == sponsor_id).count()
-            count_in=User.query.filter_by(role='influencer').count()
-            count_pads=AdRequest.query.join(Campaign).filter(Campaign.sponsor_id == user.user_id).filter(AdRequest.status == "Pending").count()
-            count_cads = AdRequest.query.join(Campaign).filter(Campaign.sponsor_id == user.user_id).filter(AdRequest.status == "Completed").count()
-            return render_template('index_sp.html',user=user,count_in=count_in,count_req=count_req,count_camps=count_camps,count_cads=count_cads,count_pads=count_pads) 
+            if user.flag:
+                flash('User is flaged please contact website admin')
+                return redirect(url_for('login'))
+            else:
+                sponsor_id = session['user_id']
+                count_camps = Campaign.query.filter_by(sponsor_id=user.user_id).count()
+                count_req=Request.query.join(Campaign).filter(Campaign.sponsor_id == sponsor_id).count()
+                count_in=User.query.filter_by(role='influencer',flag=False).count()
+                count_pads=AdRequest.query.join(Campaign).filter(Campaign.sponsor_id == user.user_id).filter(AdRequest.status == "Pending").count()
+                count_cads = AdRequest.query.join(Campaign).filter(Campaign.sponsor_id == user.user_id).filter(AdRequest.status == "Completed").count()
+                return render_template('index_sp.html',user=user,count_in=count_in,count_req=count_req,count_camps=count_camps,count_cads=count_cads,count_pads=count_pads) 
 @app.route('/admin')
 @auth
 def admin():
@@ -48,7 +56,9 @@ def admin():
     count_camps=Campaign.query.count()
     count_in=User.query.filter_by(role='influencer').count()
     count_sp=User.query.filter_by(role='sponsor').count()
-    return render_template('admin.html',user=user,count_tads=count_tads,count_cads=count_cads,count_pads=count_pads,count_req=count_req,count_camps=count_camps,count_in=count_in,count_sp=count_sp,count_campspu=count_campspu,count_campspv=count_campspv)    
+    count_flagus=User.query.filter_by(flag=True).count()
+    count_flagcp=Campaign.query.filter_by(flag=True).count()
+    return render_template('admin.html',user=user,count_tads=count_tads,count_cads=count_cads,count_pads=count_pads,count_req=count_req,count_camps=count_camps,count_in=count_in,count_sp=count_sp,count_campspu=count_campspu,count_campspv=count_campspv,count_flagus=count_flagus,count_flagcp=count_flagcp)    
 @app.route('/profile')
 @auth
 def profile():
@@ -132,7 +142,7 @@ def logout():
 @auth
 def campaigns():
     user = User.query.get(session['user_id'])
-    campaigns = Campaign.query.filter_by(sponsor_id=user.user_id).all()
+    campaigns = Campaign.query.filter_by(sponsor_id=user.user_id,flag=False).all()
     return render_template('campaigns.html',campaigns=campaigns)  
 @app.route('/campaign/register')
 @auth
@@ -171,6 +181,22 @@ def find():
         return render_template('find.html', users=users)
     else:
         return "Access denied"
+@app.route('/flag_users')
+@auth
+def flag_users():
+    if User.query.get(session['user_id']).is_admin:
+        users = User.query.filter_by(flag=True).all()
+        return render_template('flag_users.html', users=users)
+    else:
+        return "Access denied"    
+@app.route('/flag_camps')
+@auth
+def flag_camps():
+    if User.query.get(session['user_id']).is_admin:
+        campaigns = Campaign.query.filter_by(flag=True).all()
+        return render_template('flag_camps.html', campaigns=campaigns)
+    else:
+        return "Access denied"     
 @app.route('/find_camp')
 @auth
 def find_camp():
@@ -179,8 +205,6 @@ def find_camp():
         return render_template('find_camp.html', campaigns=campaigns)
     else:
         return "Access denied"
-
-
 @app.route('/user/<int:id>/delete')
 @auth
 def delete_user(id):
@@ -194,22 +218,42 @@ def delete_user(id):
     else:
         flash('Access denied')
         return redirect(url_for('find'))
-
-#@app.route('/user/<int:id>', methods=['GET', 'POST'])
-#@auth
-#def edit_user(id):
-#    user = User.query.get(id)
-#    if request.method == 'POST':
-#        user.username = request.form['username']
-#        user.name = request.form['name']
-#        user.email = request.form['email']
-#        user.platform = request.form['platform']
-#        if request.form['password']:
-#            user.password = generate_password_hash(request.form['password'])
-#        db.session.commit()
-#        flash('Profile updated successfully')
-#        return redirect(url_for('find'))
-#    return render_template('profile.html', user=user)
+@app.route('/user/<int:id>/flag')
+@auth
+def flag_user(id):
+    user = User.query.get(session['user_id'])
+    if user.is_admin:
+        user = User.query.get(id)
+        user.flag = True
+        db.session.commit()
+        flash('User Flagged successfully')
+        return redirect(url_for('find'))
+    else:
+        flash('Access denied')
+        return redirect(url_for('find'))
+@app.route('/campaigns/<int:id>/unflag')
+@auth
+def unflag_campaign(id):
+    user = User.query.get(session['user_id'])
+    campaign = Campaign.query.get(id)
+    if campaign and  user.is_admin:
+        campaign.flag = False
+        db.session.commit()
+        flash('Campaign Unflagged successfully')
+    return redirect(url_for('flag_camps'))   
+@app.route('/user/<int:id>/unflag')
+@auth
+def unflag_user(id):
+    user = User.query.get(session['user_id'])
+    if user.is_admin:
+        user = User.query.get(id)
+        user.flag = False
+        db.session.commit()
+        flash('User Unflagged successfully')
+        return redirect(url_for('flag_users'))
+    else:
+        flash('Access denied')
+        return redirect(url_for('find'))    
 @app.route('/campaigns/<int:id>/delete')
 @auth
 def delete_campaign(id):
@@ -223,6 +267,17 @@ def delete_campaign(id):
         return redirect(url_for('find_camp'))
     else:
         return redirect(url_for('campaigns'))
+@app.route('/campaigns/<int:id>/flag')
+@auth
+def flag_campaign(id):
+    user = User.query.get(session['user_id'])
+    campaign = Campaign.query.get(id)
+    if campaign and  user.is_admin:
+        campaign.flag = True
+        db.session.commit()
+        flash('Campaign flagged successfully')
+    return redirect(url_for('find_camp'))
+  
 @app.route('/campaigns/<int:id>/edit', methods=['GET', 'POST'])
 @auth
 def edit_campaign(id):
@@ -251,20 +306,20 @@ def dis_camp():
         para = request.form['para']
         query = request.form['search']
         if para == 'Name':
-            campaigns = Campaign.query.filter_by(visibility='public').filter(Campaign.name.like('%' + query + '%')).all()
+            campaigns = Campaign.query.filter_by(visibility='public',flag=False).filter(Campaign.name.like('%' + query + '%')).all()
         elif para == 'Description':
-            campaigns = Campaign.query.filter_by(visibility='public').filter(Campaign.description.like('%' + query + '%')).all()
+            campaigns = Campaign.query.filter_by(visibility='public',flag=False).filter(Campaign.description.like('%' + query + '%')).all()
         elif para == 'Budget':
-            campaigns = Campaign.query.filter_by(visibility='public').filter(Campaign.budget.like('%' + query + '%')).all()
+            campaigns = Campaign.query.filter_by(visibility='public',flag=False).filter(Campaign.budget.like('%' + query + '%')).all()
         elif para == 'start_date':
-            campaigns = Campaign.query.filter_by(visibility='public').filter(Campaign.start_date.like('%' + query + '%')).all()
+            campaigns = Campaign.query.filter_by(visibility='public',flag=False).filter(Campaign.start_date.like('%' + query + '%')).all()
         elif para == 'end_date':
-            campaigns = Campaign.query.filter_by(visibility='public').filter(Campaign.end_date.like('%' + query + '%')).all()
+            campaigns = Campaign.query.filter_by(visibility='public',flag=False).filter(Campaign.end_date.like('%' + query + '%')).all()
         elif para == 'niche':
-            campaigns = Campaign.query.filter_by(visibility='public').filter(Campaign.niche.like('%' + query + '%')).all()
+            campaigns = Campaign.query.filter_by(visibility='public',flag=False).filter(Campaign.niche.like('%' + query + '%')).all()
         return render_template('dis_camps.html', campaigns=campaigns)
     else:
-        campaigns = Campaign.query.filter_by(visibility='public').all()
+        campaigns = Campaign.query.filter_by(visibility='public',flag=False).all()
         return render_template('dis_camps.html', campaigns=campaigns)
 @app.route('/accepted_campaigns', methods=['GET'])
 def accepted_campaigns():
@@ -329,18 +384,18 @@ def dis_influ():
         para = request.form['para']
         query = request.form['search']
         if para == 'Username':
-            users = User.query.filter_by(role='influencer').filter(User.username.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.username.like('%' + query + '%')).all()
         elif para == 'Name':
-            users = User.query.filter_by(role='influencer').filter(User.name.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.name.like('%' + query + '%')).all()
         elif para == 'platform':
-            users = User.query.filter_by(role='influencer').filter(User.platform.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.platform.like('%' + query + '%')).all()
         elif para == 'followers':
-            users = User.query.filter_by(role='influencer').filter(User.followers.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.followers.like('%' + query + '%')).all()
         elif para == 'niche':
-            users = User.query.filter_by(role='influencer').filter(User.niche.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.niche.like('%' + query + '%')).all()
         return render_template('dis_influ.html', users=users)
     else:
-        users = User.query.filter_by(role='influencer').all()
+        users = User.query.filter_by(role='influencer',flag=False).all()
         return render_template('dis_influ.html', users=users)
 @app.route('/request/influencer/<int:id>', methods=['GET', 'POST'])
 @auth
@@ -349,18 +404,18 @@ def req_influ(id):
         para = request.form['para']
         query = request.form['search']
         if para == 'Username':
-            users = User.query.filter_by(role='influencer').filter(User.username.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.username.like('%' + query + '%')).all()
         elif para == 'Name':
-            users = User.query.filter_by(role='influencer').filter(User.name.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.name.like('%' + query + '%')).all()
         elif para == 'platform':
-            users = User.query.filter_by(role='influencer').filter(User.platform.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.platform.like('%' + query + '%')).all()
         elif para == 'followers':
-            users = User.query.filter_by(role='influencer').filter(User.followers.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.followers.like('%' + query + '%')).all()
         elif para == 'niche':
-            users = User.query.filter_by(role='influencer').filter(User.niche.like('%' + query + '%')).all()
+            users = User.query.filter_by(role='influencer',flag=False).filter(User.niche.like('%' + query + '%')).all()
         return render_template('req_in.html', users=users, id=id)
     else:
-        users = User.query.filter_by(role='influencer').all()
+        users = User.query.filter_by(role='influencer',flag=False).all()
         return render_template('req_in.html', users=users, id=id)
 @app.route('/create_request', methods=['POST'])
 @auth

@@ -9,15 +9,21 @@
           <a class="nav-link" href="{{ url_for('profile') }}"">profile</a>
         </li>
         <li class="nav-item">
-          <a class="btn btn-outline-info" href="{{ url_for('find') }}">Click here to see all users</a>
+          <a class="nav-link" href="{{ url_for('find') }}">All users</a>
         <li class="nav-item">
-          <a class="btn btn-outline-info" href="{{ url_for('find_camp') }}">Click here to see all campaigns</a>
+          <a class="nav-link" href="{{ url_for('find_camp') }}">All campaigns</a>
         </li>
         <li>
-          <a class="btn btn-outline-info" href="{{ url_for('find_ads') }}">Click here to see all Ads</a>
+          <a class="nav-link" href="{{ url_for('find_ads') }}">All Ads</a>
         </li>
         <li>
-          <a class="btn btn-outline-info" href="{{ url_for('find_req') }}">Click here to see all Request</a>
+          <a class="nav-link" href="{{ url_for('find_req') }}">All Request</a>
+        </li>
+        <li>
+          <a class="nav-link" href="{{ url_for('flag_users') }}">Flagged Users</a>
+        </li>
+        <li>
+          <a class="nav-link" href="{{ url_for('flag_camps') }}">Flagged Campagins</a>
         </li>
         <li >
           <a class="btn btn-outline-danger" href="{{ url_for('logout') }}"">Logout</a>  

@@ -4,9 +4,7 @@
 {% endblock %}
 {% block content %}
     <h1>Welcome Back!! {{ user.name }}</h1>
-    <br>
     <h3>Admin Dashboard</h3>
-    <br>
     <div >
     <table class="table table-bordered  table-hover" style="width: auto; margin: auto;">
         <thead>
@@ -63,6 +61,23 @@
             </tbody>
           </table>
         </div>
+        <br>
+    <div >
+      <table class="table table-bordered  table-hover" style="width: auto; margin: auto;">
+          <thead>
+            <tr>
+              <th scope="col">Flagged Users</th>
+              <th scope="col">Flagged Campagins</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{count_flagus}}</td>
+              <td>{{count_flagcp}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>   
 <style>
     h1,h3,table{
         text-align: center;
