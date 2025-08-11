@@ -1,7 +1,7 @@
 from app import app
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-db=SQLAlchemy(app)
+db=SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -57,10 +57,3 @@ class Request(db.Model):
     new_price = db.Column(db.Integer, nullable=True)
     influencer_agreed = db.Column(db.Boolean, default=False)
     sponsor_agreed = db.Column(db.Boolean, default=False)
-with app.app_context():
-    db.create_all()
-    admin=User.query.filter_by(is_admin=True).first()
-    if not admin:
-        admin=User(username='admin',password='admin',name='admin',is_admin=True,email='admin@admin.com',role='admin')
-        db.session.add(admin)
-        db.session.commit()   
